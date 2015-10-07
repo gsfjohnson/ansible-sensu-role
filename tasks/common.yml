@@ -21,7 +21,7 @@
     group="{{ sensu_group }}"
     mode=0750
     state=directory
-  when: not sensu_server_rabbitmq_insecure
+  when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
 
 - name: install ssl certificate and key
   copy:
@@ -34,7 +34,7 @@
   with_items:
     - "{{ sensu_cert_file_name }}"
     - "{{ sensu_key_file_name }}"
-  when: not sensu_server_rabbitmq_insecure
+  when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
   notify:
     - service restart sensu-server
     - service restart sensu-client
@@ -47,6 +47,7 @@
     group=sensu
     mode=0640
     backup=yes
+  when: sensu_transport == "rabbitmq"
   notify:
     - service restart sensu-server
     - service restart sensu-client
