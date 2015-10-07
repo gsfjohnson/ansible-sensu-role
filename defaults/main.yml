@@ -52,3 +52,6 @@ sensu_handlers: {}
 
 sensu_server_patch_init_scripts: false
 
+sensu_client_docurl: "none"
+
+sensu_client_subscriptions: []
