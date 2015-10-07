@@ -1,0 +1,21 @@
+---
+- name: enable sensu-client to survive reboot
+  service: name=sensu-client enabled=yes
+
+- name: copy plugins
+  copy:
+    src=plugins/
+    dest=/etc/sensu/plugins/
+    owner="{{ sensu_user }}"
+    group="{{ sensu_group }}"
+    mode=0750
+
+- name: config client.json
+  template:
+    src=client.json.j2
+    dest=/etc/sensu/conf.d/client.json
+    owner="{{ sensu_user }}"
+    group="{{ sensu_group }}"
+    mode=0640
+    backup=yes
+  notify: service restart sensu-client
