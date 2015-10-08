@@ -10,12 +10,16 @@
     group="{{ sensu_group }}"
     mode=0750
 
-- name: config client.json
+- name: copy cfg templates
   template:
-    src=client.json.j2
-    dest=/etc/sensu/conf.d/client.json
+    src="{{item}}.json.j2"
+    dest="/etc/sensu/conf.d/{{item}}.json"
     owner="{{ sensu_user }}"
     group="{{ sensu_group }}"
     mode=0640
     backup=yes
+  with_items:
+    - client
+    - redis
+    - transport
   notify: service restart sensu-client
