@@ -25,15 +25,13 @@
 
 - name: install ssl certificate and key
   copy:
-    src={{ item }}
-    dest=/etc/sensu/ssl/{{ item }}
-    owner="{{ sensu_user }}"
-    group="{{ sensu_group }}"
-    mode=0640
-    backup=yes
-  with_items:
-    - "{{ sensu_cert_file_name }}"
-    - "{{ sensu_key_file_name }}"
+    content: "{{item.content}}"
+    dest: "/etc/sensu/ssl/{{item.filename}}"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: 0640
+    backup: yes
+  with_items: sensu_ssl_certs
   when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
   notify:
     - service restart sensu-server
