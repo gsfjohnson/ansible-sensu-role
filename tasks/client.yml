@@ -1,6 +1,9 @@
 ---
+
 - name: enable sensu-client to survive reboot
-  service: name=sensu-client enabled=yes
+  service:
+    name=sensu-client
+    enabled=yes
 
 - name: copy plugins
   copy:
@@ -10,16 +13,34 @@
     group="{{ sensu_group }}"
     mode=0750
 
-- name: copy cfg templates
+- name: templates client.json
   template:
-    src="{{item}}.json.j2"
-    dest="/etc/sensu/conf.d/{{item}}.json"
-    owner="{{ sensu_user }}"
-    group="{{ sensu_group }}"
-    mode=0640
-    backup=yes
-  with_items:
-    - client
-    - redis
-    - transport
+    src: "client.json.j2"
+    dest: "/etc/sensu/conf.d/client.json"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: "0640"
+    backup: yes
+  notify: service restart sensu-client
+
+- name: templates transport.json
+  template:
+    src: "transport.json.j2"
+    dest: "/etc/sensu/conf.d/transport.json"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: "0640"
+    backup: yes
+  when: sensu_transport == "redis"
+  notify: service restart sensu-client
+
+- name: templates redis.json
+  template:
+    src: "redis.json.j2"
+    dest: "/etc/sensu/conf.d/redis.json"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: "0640"
+    backup: yes
+  when: sensu_transport == "redis"
   notify: service restart sensu-client
