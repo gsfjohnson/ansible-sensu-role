@@ -13,10 +13,29 @@ sensu_settings: {}
 
 sensu_embedded_ruby: "true"
 
+# Package
+sensu_pkg_name: sensu
+sensu_pkg_state: installed
+
+# Transport; { rabbitmq, redis }
+sensu_transport: rabbitmq
+
 # Sensu Certificates
 sensu_cert_dir:       files
 sensu_cert_file_name: sensu.pem
 sensu_key_file_name:  sensu.key
+
+sensu_ssl_certs: []
+#  - filename: sensu.pem
+#    content: |
+#      -----BEGIN CERTIFICATE-----
+#      blah blah
+#      -----END CERTIFICATE-----
+#  - filename: sensu.key
+#    content: |
+#      -----BEGIN RSA PRIVATE KEY-----
+#      blah blah
+#      -----END RSA PRIVATE KEY-----
 
 # Sensu client variable
 sensu_client_hostname:           "localhost"
@@ -31,7 +50,6 @@ sensu_server_api_port:     4567
 sensu_server_api_user:     "sensu"
 sensu_server_api_password: "placeholder"
 
-sensu_transport: rabbitmq
 sensu_server_rabbitmq_vhost:    "/sensu"
 sensu_server_rabbitmq_hostname: "127.0.0.1"
 # This is the RabbitMQ TLS port, if you choose to not use a secure

@@ -1,15 +1,14 @@
 ---
-#- name: add rpm key
-#  rpm_key:
-#    key: http://repos.sensuapp.org/apt/pubkey.gpg
-#    state: present
 
 # this requires libselinux-python
 - name: add repo
   template:
     src: sensu.repo.j2
     dest: /etc/yum.repos.d/sensu.repo
-    mode: 0644
+    mode: "0644"
 
 - name: install pkg
-  yum: pkg=sensu state=installed enablerepo=sensu
+  yum:
+    pkg={{sensu_pkg_name}}
+    state={{sensu_pkg_state}}
+    enablerepo=sensu
