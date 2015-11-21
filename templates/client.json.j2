@@ -3,13 +3,21 @@
     "name": "{{ ansible_hostname }}",
     "address": "{{ ansible_default_ipv4.address }}",
     "documentation": "{{ sensu_client_docurl }}",
-    "g_cpu": "http://graphite.alaska.edu/render/?width=600&height=200&areaMode=stacked&target=servers.{{ansible_hostname}}.vmstat.cpu.idle&target=servers.{{ansible_hostname}}.vmstat.cpu.user&target=servers.{{ansible_hostname}}.vmstat.cpu.waiting&target=servers.{{ansible_hostname}}.vmstat.cpu.system&yMax=100&uchiwa_force_display_as_image=.png",
-    "g_mem": "http://graphite.alaska.edu/render/?width=600&height=200&target=servers.{{ansible_hostname}}.memory.usedWOBuffersCaches&target=servers.{{ansible_hostname}}.memory.total&areaMode=first&yMin=0&uchiwa_force_display_as_image=.png",
-    "g_load": "http://graphite.alaska.edu/render/?width=600&height=200&target=servers.{{ansible_hostname}}.load_avg.fifteen&target=servers.{{ansible_hostname}}.load_avg.five&target=servers.{{ansible_hostname}}.load_avg.one&yDivisors=4&uchiwa_force_display_as_image=.png",
-    "g_disk": "http://graphite.alaska.edu/render/?width=600&height=200&target=servers.{{ansible_hostname}}.du.var.used_pc&target=servers.{{ansible_hostname}}.du.usr_local.used_pc&target=servers.{{ansible_hostname}}.du.tmp.used_pc&target=servers.{{ansible_hostname}}.du.root.used_pc&target=servers.{{ansible_hostname}}.du.home.used_pc&target=servers.{{ansible_hostname}}.du.boot.used_pc&yMax=100&uchiwa_force_display_as_image=.png",
-{% for int in ansible_interfaces if int != 'lo' and int != 'br-tun' and int != 'br-int' and int != 'br-ex' and int != 'ovs-system' %}
-    "g_net_{{int}}": "http://graphite.alaska.edu/render/?width=600&height=200&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.rxBytes)&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.txBytes)&uchiwa_force_display_as_image=.png",
+{% if sensu_graph_link is defined and sensu_graphs is defined %}
+{% for g in sensu_graphs %}
+    "g_{{g.name}}": "{{sensu_graph_link}}{% if g.width is defined %}width={{g.width}}&{% endif %}{% if g.height is defined %}height={{g.height}}&{% endif %}{% if g.areaMode is defined %}areaMode={{g.areaMode}}&{% endif %}{% if g.targets is defined %}{% for target in g.targets %}target={{target}}&{% endfor %}{% endif %}{% if g.yMin is defined %}yMin={{g.yMin}}&{% endif %}{% if g.yMax is defined %}yMax={{g.yMax}}&{% endif %}{% if g.yDivisors is defined %}yDivisors={{g.yDivisors}}&{% endif %}{% if g.uchiwa_force_display_as_image is defined %}uchiwa_force_display_as_image={{g.uchiwa_force_display_as_image}}{% endif %}",
 {% endfor %}
-    "subscriptions": [ "{{ "\",\"".join(sensu_client_subscriptions) }}" ]
-   }
+{% for int in ansible_interfaces if int != 'lo' and int != 'br-tun' and int != 'br-int' and int != 'br-ex' and int != 'ovs-system' %}
+    "g_net_{{int}}": "{{sensu_graph_link}}width=600&height=200&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.rxBytes)&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.txBytes)&uchiwa_force_display_as_image=.png",
+{% endfor %}
+{% endif %}
+{% if sensu_client_keepalive is defined %}
+    "keepalive": {
+{% if sensu_client_keepalive.handlers is defined %}
+      "handlers": [ "{{ "\", \"".join(sensu_client_keepalive.handlers) }}" ]
+{% endif %}
+    },
+{% endif %}
+    "subscriptions": [ "{{ "\", \"".join(sensu_client_subscriptions) }}" ]
+  }
 }
