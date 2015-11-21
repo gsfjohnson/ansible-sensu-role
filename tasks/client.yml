@@ -13,7 +13,7 @@
     group="{{ sensu_group }}"
     mode=0750
 
-- name: templates client.json
+- name: client.json template
   template:
     src: "client.json.j2"
     dest: "/etc/sensu/conf.d/client.json"
@@ -23,7 +23,7 @@
     backup: yes
   notify: service restart sensu-client
 
-- name: templates transport.json
+- name: transport.json template
   template:
     src: "transport.json.j2"
     dest: "/etc/sensu/conf.d/transport.json"
@@ -34,7 +34,7 @@
   when: sensu_transport == "redis"
   notify: service restart sensu-client
 
-- name: templates redis.json
+- name: redis.json template
   template:
     src: "redis.json.j2"
     dest: "/etc/sensu/conf.d/redis.json"
@@ -44,3 +44,4 @@
     backup: yes
   when: sensu_transport == "redis"
   notify: service restart sensu-client
+
