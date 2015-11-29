@@ -3,18 +3,30 @@
     "name": "{{ ansible_hostname }}",
     "address": "{{ ansible_default_ipv4.address }}",
     "documentation": "{{ sensu_client_docurl }}",
-{% if sensu_graph_link is defined and sensu_graphs is defined %}
-{% for g in sensu_graphs %}
-    "g_{{g.name}}": "{{sensu_graph_link}}{% if g.width is defined %}width={{g.width}}&{% endif %}{% if g.height is defined %}height={{g.height}}&{% endif %}{% if g.areaMode is defined %}areaMode={{g.areaMode}}&{% endif %}{% if g.targets is defined %}{% for target in g.targets %}target={{target}}&{% endfor %}{% endif %}{% if g.yMin is defined %}yMin={{g.yMin}}&{% endif %}{% if g.yMax is defined %}yMax={{g.yMax}}&{% endif %}{% if g.yDivisors is defined %}yDivisors={{g.yDivisors}}&{% endif %}{% if g.uchiwa_force_display_as_image is defined %}uchiwa_force_display_as_image={{g.uchiwa_force_display_as_image}}{% endif %}",
-{% endfor %}
-{% for int in ansible_interfaces if int != 'lo' and int != 'br-tun' and int != 'br-int' and int != 'br-ex' and int != 'ovs-system' %}
-    "g_net_{{int}}": "{{sensu_graph_link}}width=600&height=200&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.rxBytes)&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.txBytes)&uchiwa_force_display_as_image=.png",
-{% endfor %}
+{% if sensu_graph_link is defined %}
+{% if sensu_graph_cpu %}
+    "g_cpu": "{{sensu_graph_link}}width={{sensu_graph_cpu_width|default(sensu_graph_width)}}&height={{sensu_graph_cpu_height|default(sensu_graph_height)}}&{% if sensu_graph_cpu_areaMode is defined %}areaMode={{sensu_graph_cpu_areaMode}}&{% endif %}{% if sensu_graph_cpu_targets is defined %}{% for target in sensu_graph_cpu_targets %}target={{target}}&{% endfor %}{% endif %}{% if sensu_graph_cpu_yMin is defined %}yMin={{sensu_graph_cpu_yMin}}&{% endif %}{% if sensu_graph_cpu_yMax is defined %}yMax={{sensu_graph_cpu_yMax}}&{% endif %}{% if sensu_graph_cpu_yDivisors is defined %}yDivisors={{sensu_graph_cpu_yDivisors}}&{% endif %}{% if uchiwa_force_display_as_image is defined %}uchiwa_force_display_as_image={{uchiwa_force_display_as_image}}{% endif %}",
 {% endif %}
-{% if sensu_client_keepalive is defined %}
+{% if sensu_graph_mem %}
+    "g_mem": "{{sensu_graph_link}}width={{sensu_graph_mem_width|default(sensu_graph_width)}}&height={{sensu_graph_mem_height|default(sensu_graph_height)}}&{% if sensu_graph_mem_areaMode is defined %}areaMode={{sensu_graph_mem_areaMode}}&{% endif %}{% if sensu_graph_mem_targets is defined %}{% for target in sensu_graph_mem_targets %}target={{target}}&{% endfor %}{% endif %}{% if sensu_graph_mem_yMin is defined %}yMin={{sensu_graph_mem_yMin}}&{% endif %}{% if sensu_graph_mem_yMax is defined %}yMax={{sensu_graph_mem_yMax}}&{% endif %}{% if sensu_graph_mem_yDivisors is defined %}yDivisors={{sensu_graph_mem_yDivisors}}&{% endif %}{% if uchiwa_force_display_as_image is defined %}uchiwa_force_display_as_image={{uchiwa_force_display_as_image}}{% endif %}",
+{% endif %}
+{% if sensu_graph_disk %}
+    "g_disk": "{{sensu_graph_link}}width={{sensu_graph_disk_width|default(sensu_graph_width)}}&height={{sensu_graph_disk_height|default(sensu_graph_height)}}&{% if sensu_graph_disk_areaMode is defined %}areaMode={{sensu_graph_disk_areaMode}}&{% endif %}{% if sensu_graph_disk_targets is defined %}{% for target in sensu_graph_disk_targets %}target={{target}}&{% endfor %}{% endif %}{% if sensu_graph_disk_yMin is defined %}yMin={{sensu_graph_disk_yMin}}&{% endif %}{% if sensu_graph_disk_yMax is defined %}yMax={{sensu_graph_disk_yMax}}&{% endif %}{% if sensu_graph_disk_yDivisors is defined %}yDivisors={{sensu_graph_disk_yDivisors}}&{% endif %}{% if uchiwa_force_display_as_image is defined %}uchiwa_force_display_as_image={{uchiwa_force_display_as_image}}{% endif %}",
+{% endif %}
+{% if sensu_graph_load %}
+    "g_load": "{{sensu_graph_link}}width={{sensu_graph_load_width|default(sensu_graph_width)}}&height={{sensu_graph_load_height|default(sensu_graph_height)}}&{% if sensu_graph_load_areaMode is defined %}areaMode={{sensu_graph_load_areaMode}}&{% endif %}{% if sensu_graph_load_targets is defined %}{% for target in sensu_graph_load_targets %}target={{target}}&{% endfor %}{% endif %}{% if sensu_graph_load_yMin is defined %}yMin={{sensu_graph_load_yMin}}&{% endif %}{% if sensu_graph_load_yMax is defined %}yMax={{sensu_graph_load_yMax}}&{% endif %}{% if sensu_graph_load_yDivisors is defined %}yDivisors={{sensu_graph_load_yDivisors}}&{% endif %}{% if uchiwa_force_display_as_image is defined %}uchiwa_force_display_as_image={{uchiwa_force_display_as_image}}{% endif %}",
+{% endif %}
+{% if sensu_graph_net %}{% for int in ansible_interfaces if int != 'lo' and int != 'br-tun' and int != 'br-int' and int != 'br-ex' and int != 'ovs-system' %}
+    "g_net_{{int}}": "{{sensu_graph_link}}width=600&height=200&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.rxBytes)&target=derivative(servers.{{ansible_hostname}}.if.{{int}}.txBytes)&uchiwa_force_display_as_image=.png",
+{% endfor %}{% endif %}
+{% if sensu_graphs is defined %}{% for g in sensu_graphs %}
+    "g_{{g.name}}": "{{sensu_graph_link}}{% if g.width is defined %}width={{g.width}}&{% endif %}{% if g.height is defined %}height={{g.height}}&{% endif %}{% if g.areaMode is defined %}areaMode={{g.areaMode}}&{% endif %}{% if g.targets is defined %}{% for target in g.targets %}target={{target}}&{% endfor %}{% endif %}{% if g.yMin is defined %}yMin={{g.yMin}}&{% endif %}{% if g.yMax is defined %}yMax={{g.yMax}}&{% endif %}{% if g.yDivisors is defined %}yDivisors={{g.yDivisors}}&{% endif %}{% if g.uchiwa_force_display_as_image is defined %}uchiwa_force_display_as_image={{g.uchiwa_force_display_as_image}}{% endif %}",
+{% endfor %}{% endif %}
+{% endif %}
+{% if sensu_client_keepalive %}
     "keepalive": {
-{% if sensu_client_keepalive.handlers is defined %}
-      "handlers": [ "{{ "\", \"".join(sensu_client_keepalive.handlers) }}" ]
+{% if sensu_client_keepalive_handlers is defined %}
+      "handlers": [ "{{ "\", \"".join(sensu_client_keepalive_handlers) }}" ]
 {% endif %}
     },
 {% endif %}

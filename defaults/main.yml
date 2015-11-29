@@ -68,8 +68,68 @@ sensu_server_dashboard_refresh:  5
 sensu_checks:   {}
 sensu_handlers: {}
 
+sensu_client_plugins:
+  - check-disk.rb
+  - check-es-cluster-status.rb
+  - check-load.rb
+  - check-mem.sh
+  - check-procs.rb
+  - disk-metrics.rb
+  - load-metrics.rb
+  - disk-usage-metrics.rb
+  - interface-metrics.rb
+  - memory-metrics.rb
+  - vmstat-metrics.rb
+sensu_client_plugins_extra: []
+#  - check-redis-list-length.rb
+#  - es-node-graphite.rb
+#  - metrics-syslog-ng.rb
+#  - redis-graphite.rb
+#  - redis-llen-metric.rb
+#  - uchiwa-health.rb
+
 sensu_server_patch_init_scripts: false
 
 sensu_client_docurl: "none"
-
+sensu_client_keepalive: false
+sensu_client_keepalive_handlers: []
 sensu_client_subscriptions: []
+
+sensu_graph_width: 600
+sensu_graph_height: 200
+uchiwa_force_display_as_image: .png
+
+sensu_graph_cpu: true
+sensu_graph_cpu_areaMode: stacked
+sensu_graph_cpu_yMax: 100
+sensu_graph_cpu_targets:
+  - servers.{{ansible_hostname}}.vmstat.cpu.idle
+  - servers.{{ansible_hostname}}.vmstat.cpu.user
+  - servers.{{ansible_hostname}}.vmstat.cpu.waiting
+  - servers.{{ansible_hostname}}.vmstat.cpu.system
+
+sensu_graph_mem: true
+sensu_graph_mem_areaMode: first
+sensu_graph_mem_yMin: 0
+sensu_graph_mem_targets:
+  - servers.{{ansible_hostname}}.memory.usedWOBuffersCaches
+  - servers.{{ansible_hostname}}.memory.total
+
+sensu_graph_load: true
+sensu_graph_load_yDivisors: 4
+sensu_graph_load_targets:
+  - servers.{{ansible_hostname}}.load_avg.fifteen
+  - servers.{{ansible_hostname}}.load_avg.five
+  - servers.{{ansible_hostname}}.load_avg.one
+
+sensu_graph_disk: true
+sensu_graph_disk_yMax: 100
+sensu_graph_disk_targets:
+  - servers.{{ansible_hostname}}.du.var.used_pc
+  - servers.{{ansible_hostname}}.du.usr_local.used_pc
+  - servers.{{ansible_hostname}}.du.tmp.used_pc
+  - servers.{{ansible_hostname}}.du.root.used_pc
+  - servers.{{ansible_hostname}}.du.home.used_pc
+  - servers.{{ansible_hostname}}.du.boot.used_pc
+
+sensu_graph_net: true

@@ -7,11 +7,21 @@
 
 - name: copy plugins
   copy:
-    src=plugins/
-    dest=/etc/sensu/plugins/
+    src=plugins/{{item}}
+    dest=/etc/sensu/plugins/{{item}}
     owner="{{ sensu_user }}"
     group="{{ sensu_group }}"
-    mode=0750
+    mode="0750"
+  with_items: sensu_client_plugins
+
+- name: copy extra plugins
+  copy:
+    src=plugins/{{item}}
+    dest=/etc/sensu/plugins/{{item}}
+    owner="{{ sensu_user }}"
+    group="{{ sensu_group }}"
+    mode="0750"
+  with_items: sensu_client_plugins_extra
 
 - name: client.json template
   template:
