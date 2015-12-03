@@ -30,6 +30,9 @@
 {% endif %}
     },
 {% endif %}
+{% if sensu_client_safe_mode %}
+    "safe_mode": true,
+{% endif %}
     "subscriptions": [ "{{ "\", \"".join(sensu_client_subscriptions) }}" ]
   }
 }
