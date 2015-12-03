@@ -1,4 +1,1 @@
-{
-   "checks":
-      {{ sensu_checks | to_nice_json }}
-}
+{ "checks": {{ item.checks | to_nice_json }} }

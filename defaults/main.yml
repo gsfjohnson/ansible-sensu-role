@@ -66,7 +66,10 @@ sensu_server_dashboard_user:     "uchiwa"
 sensu_server_dashboard_password: "placeholder"
 sensu_server_dashboard_refresh:  5
 
-sensu_checks:   {}
+sensu_checks: []
+#- name: check123
+#  checks:
+#    "blah-chk-blah": { yahda yahda }
 sensu_handlers: {}
 
 sensu_client_plugins:
