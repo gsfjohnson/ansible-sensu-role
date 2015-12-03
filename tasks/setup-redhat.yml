@@ -1,13 +1,12 @@
 ---
 
-# this requires libselinux-python
-- name: add repo
+- name: setup | add repo
   template:
     src: sensu.repo.j2
     dest: /etc/yum.repos.d/sensu.repo
     mode: "0644"
 
-- name: install pkg
+- name: setup | install pkg
   yum:
     pkg={{sensu_pkg_name}}
     state={{sensu_pkg_state}}

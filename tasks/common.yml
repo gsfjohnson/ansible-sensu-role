@@ -1,20 +1,18 @@
 ---
-- include: setup-redhat.yml
-  when: ansible_os_family == 'RedHat'
 
-- name: set which Ruby to use
+- name: common | set which Ruby to use
   lineinfile:
     dest=/etc/default/sensu
     regexp=^EMBEDDED_RUBY=
     line=EMBEDDED_RUBY={{ sensu_embedded_ruby }}
 
-- name: set which user to use
+- name: common | set which user to use
   lineinfile:
     dest=/etc/default/sensu
     regexp=^USER=
     line=USER={{ sensu_user }}
 
-- name: create the SSL directory
+- name: common | create the SSL directory
   file:
     path=/etc/sensu/ssl
     owner="{{ sensu_user }}"
@@ -23,7 +21,7 @@
     state=directory
   when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
 
-- name: install ssl certificate and key
+- name: common | install ssl certificate and key
   copy:
     content: "{{item.content}}"
     dest: "/etc/sensu/ssl/{{item.filename}}"
@@ -37,7 +35,7 @@
     - service restart sensu-server
     - service restart sensu-client
 
-- name: generate rabbitmq.json
+- name: common | generate rabbitmq.json
   template:
     src=rabbitmq.json.j2
     dest=/etc/sensu/conf.d/rabbitmq.json
@@ -49,3 +47,4 @@
   notify:
     - service restart sensu-server
     - service restart sensu-client
+

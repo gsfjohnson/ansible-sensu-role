@@ -1,11 +1,11 @@
 ---
 
-- name: enable sensu-client to survive reboot
+- name: client | enable sensu-client to survive reboot
   service:
     name=sensu-client
     enabled=yes
 
-- name: copy plugins
+- name: client | copy plugins
   copy:
     src=plugins/{{item}}
     dest=/etc/sensu/plugins/{{item}}
@@ -14,7 +14,7 @@
     mode="0750"
   with_items: sensu_client_plugins
 
-- name: copy extra plugins
+- name: client | copy extra plugins
   copy:
     src=plugins/{{item}}
     dest=/etc/sensu/plugins/{{item}}
@@ -23,7 +23,7 @@
     mode="0750"
   with_items: sensu_client_plugins_extra
 
-- name: client.json template
+- name: client | client.json template
   template:
     src: "client.json.j2"
     dest: "/etc/sensu/conf.d/client.json"
@@ -33,7 +33,7 @@
     backup: yes
   notify: service restart sensu-client
 
-- name: transport.json template
+- name: client | transport.json template
   template:
     src: "transport.json.j2"
     dest: "/etc/sensu/conf.d/transport.json"
@@ -44,7 +44,7 @@
   when: sensu_transport == "redis"
   notify: service restart sensu-client
 
-- name: redis.json template
+- name: client | redis.json template
   template:
     src: "redis.json.j2"
     dest: "/etc/sensu/conf.d/redis.json"

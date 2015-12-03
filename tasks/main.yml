@@ -1,14 +1,16 @@
 ---
-# tasks file for sensu
+
+- include: setup-redhat.yml
+  when: ansible_os_family == 'RedHat'
 
 - include: common.yml
+
+- include: client.yml
+  when: sensu_client
 
 - include: server.yml
   when: sensu_server
 
 - include: uchiwa.yml
   when: sensu_server and sensu_uchiwa
-
-- include: client.yml
-  when: sensu_client
 
