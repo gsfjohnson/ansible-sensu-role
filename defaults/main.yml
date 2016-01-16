@@ -70,6 +70,11 @@ sensu_checks: []
 #- name: check123
 #  checks:
 #    "blah-chk-blah": { yahda yahda }
+sensu_checks_extra: []
+#- name: check123
+#  checks:
+#    "blah-chk-blah": { yahda yahda }
+
 sensu_handlers: {}
 
 sensu_client_plugins:
