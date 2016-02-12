@@ -141,4 +141,8 @@ sensu_graph_disk_targets:
   - servers.{{ansible_hostname}}.du.home.used_pc
   - servers.{{ansible_hostname}}.du.boot.used_pc
 
+sensu_graph_diskio: false
+sensu_graph_diskio_yMax: 100
+sensu_graph_diskio_targets: []
+
 sensu_graph_net: true
