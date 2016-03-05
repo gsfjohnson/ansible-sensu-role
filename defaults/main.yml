@@ -37,6 +37,11 @@ sensu_ssl_certs: []
 #      blah blah
 #      -----END RSA PRIVATE KEY-----
 
+# Custom gems
+sensu_custom_gems: []
+#  - name: mysql2
+#    version: 1.2.3
+
 # Sensu client variable
 sensu_client_hostname:           "localhost"
 sensu_client_address:            "127.0.0.1"
