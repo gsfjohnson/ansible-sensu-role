@@ -79,7 +79,7 @@ class CheckSSLCert < Sensu::Plugin::Check::CLI
     if !config[:pem]
       unknown 'Host and port required' unless config[:host] && config[:port]
     elsif config[:pem]
-      unknown 'No such cert' unless File.exist? config[:pem]
+      unknown 'No such cert' unless File.file?(config[:pem])
     end
     config[:servername] = config[:host] unless config[:servername]
   end
