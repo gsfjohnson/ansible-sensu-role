@@ -93,6 +93,7 @@ sensu_client_plugins:
   - interface-metrics.rb
   - memory-metrics.rb
   - vmstat-metrics.rb
+  - check-ssl-cert.rb
 sensu_client_plugins_extra: []
 #  - check-redis-list-length.rb
 #  - check-es-cluster-status.rb
