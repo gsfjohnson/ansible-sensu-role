@@ -9,9 +9,10 @@ sensu_uchiwa: false
 sensu_user:  sensu
 sensu_group: sensu
 
-sensu_settings: {}
+sensu_default_user: sensu
+sensu_default_embeddedruby: true
 
-sensu_embedded_ruby: "true"
+sensu_settings: {}
 
 # Package
 sensu_pkg_name: sensu

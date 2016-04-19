@@ -1,16 +1,15 @@
 ---
 
-- name: common | set which Ruby to use
-  lineinfile:
+- name: common | application defaults
+  template:
+    src=default-sensu.j2
     dest=/etc/default/sensu
-    regexp=^EMBEDDED_RUBY=
-    line=EMBEDDED_RUBY={{ sensu_embedded_ruby }}
-
-- name: common | set which user to use
-  lineinfile:
-    dest=/etc/default/sensu
-    regexp=^USER=
-    line=USER={{ sensu_user }}
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - service restart sensu-server
+    - service restart sensu-client
 
 - name: common | create the SSL directory
   file:
