@@ -16,7 +16,7 @@
   copy:
     src: "files/{{item.name}}-{{item.version}}.gem"
     dest: "/tmp"
-  with_items: sensu_custom_gems
+  with_items: "{{sensu_custom_gems}}"
   when: item.source is defined and item.source == "files"
 
 - name: register gem version
@@ -28,4 +28,4 @@
   args:
     creates: /opt/sensu/embedded/lib/ruby/gems/{{st.stdout}}.0/specifications/{{item.name}}-{{item.version}}.gemspec
     chdir: /tmp
-  with_items: sensu_custom_gems
+  with_items: "{{sensu_custom_gems}}"

@@ -12,7 +12,7 @@
     owner="{{ sensu_user }}"
     group="{{ sensu_group }}"
     mode="0750"
-  with_items: sensu_client_plugins
+  with_items: "{{sensu_client_plugins}}"
 
 - name: client | copy extra plugins
   copy:
@@ -21,7 +21,7 @@
     owner="{{ sensu_user }}"
     group="{{ sensu_group }}"
     mode="0750"
-  with_items: sensu_client_plugins_extra
+  with_items: "{{sensu_client_plugins_extra}}"
 
 - name: client | client.json template
   template:
@@ -62,7 +62,7 @@
     owner: "{{sensu_user}}"
     group: "{{sensu_group}}"
     mode: "0640"
-  with_items: sensu_checks
+  with_items: "{{sensu_checks}}"
   notify: service restart sensu-client
 
 - name: client | checks.json extra template
@@ -72,6 +72,6 @@
     owner: "{{sensu_user}}"
     group: "{{sensu_group}}"
     mode: "0640"
-  with_items: sensu_checks_extra
+  with_items: "{{sensu_checks_extra}}"
   notify: service restart sensu-client
 

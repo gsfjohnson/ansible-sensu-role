@@ -28,7 +28,7 @@
     group: "{{sensu_group}}"
     mode: 0640
     backup: yes
-  with_items: sensu_ssl_certs
+  with_items: "{{sensu_ssl_certs}}"
   when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
   notify:
     - service restart sensu-server
