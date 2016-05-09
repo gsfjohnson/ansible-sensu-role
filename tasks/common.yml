@@ -11,25 +11,37 @@
     - service restart sensu-server
     - service restart sensu-client
 
-- name: common | create the SSL directory
-  file:
-    path=/etc/sensu/ssl
-    owner="{{ sensu_user }}"
-    group="{{ sensu_group }}"
-    mode=0750
-    state=directory
-  when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
+#- name: common | create the SSL directory
+#  file:
+#    path=/etc/sensu/ssl
+#    owner="{{ sensu_user }}"
+#    group="{{ sensu_group }}"
+#    mode=0750
+#    state=directory
+#  when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
 
-- name: common | install ssl certificate and key
+- name: common | install certificate content
   copy:
     content: "{{item.content}}"
-    dest: "/etc/sensu/ssl/{{item.filename}}"
+    dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
     owner: "{{sensu_user}}"
     group: "{{sensu_group}}"
     mode: 0640
-    backup: yes
-  with_items: "{{sensu_ssl_certs}}"
-  when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure
+  with_items: "{{sensu_certs}}"
+  when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure and item.content is defined and item.src is not defined
+  notify:
+    - service restart sensu-server
+    - service restart sensu-client
+
+- name: common | install certificate file
+  copy:
+    src: "{{item.src}}"
+    dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: 0640
+  with_items: "{{sensu_certs}}"
+  when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure and item.src is defined and item.content is not defined
   notify:
     - service restart sensu-server
     - service restart sensu-client

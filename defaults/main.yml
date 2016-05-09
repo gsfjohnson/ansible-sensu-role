@@ -22,17 +22,15 @@ sensu_pkg_state: installed
 sensu_transport: rabbitmq
 
 # Sensu Certificates
-sensu_cert_dir:       files
-sensu_cert_file_name: sensu.pem
-sensu_key_file_name:  sensu.key
+sensu_cert_file: sensu.pem
+sensu_key_file: sensu.key
 
-sensu_ssl_certs: []
+sensu_certs: []
 #  - filename: sensu.pem
-#    content: |
-#      -----BEGIN CERTIFICATE-----
-#      blah blah
-#      -----END CERTIFICATE-----
+#    type: certs
+#    src: files/sensu.crt
 #  - filename: sensu.key
+#    type: private
 #    content: |
 #      -----BEGIN RSA PRIVATE KEY-----
 #      blah blah
