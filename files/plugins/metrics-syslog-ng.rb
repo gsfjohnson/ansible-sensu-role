@@ -36,7 +36,7 @@ class SyslogNgMetrics < Sensu::Plugin::Metric::CLI::Graphite
   def run
     binary = "#{config[:ctl_path]}/syslog-ng-ctl"
     if File.exist? binary
-      cmd = "/usr/bin/sudo #{config[:ctl_path]}/syslog-ng-ctl stats | "
+      cmd = "#{config[:ctl_path]}/syslog-ng-ctl stats | "
       cmd += 'awk -F\; \'NR!=1 && $1 != "src.none" { '
       cmd += ' if ($2 == "") { t=$3 } else {t=$2} {} '
       cmd += ' if ($5 == "stored") {type="gauge"} else {type="derive"} '
