@@ -26,7 +26,7 @@
     dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
     owner: "{{sensu_user}}"
     group: "{{sensu_group}}"
-    mode: 0640
+    mode: "0640"
   with_items: "{{sensu_certs}}"
   when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure and item.content is defined and item.src is not defined
   notify:
@@ -39,9 +39,49 @@
     dest: "/etc/pki/tls/{{item.type}}/{{item.filename}}"
     owner: "{{sensu_user}}"
     group: "{{sensu_group}}"
-    mode: 0640
+    mode: "0640"
   with_items: "{{sensu_certs}}"
   when: sensu_transport == "rabbitmq" and not sensu_server_rabbitmq_insecure and item.src is defined and item.content is not defined
+  notify:
+    - service restart sensu-server
+    - service restart sensu-client
+
+- name: hashicorp vault /pki/issue
+  set_fact: sensu_hvault_certs="{{ lookup('hashvault', 'method=write vaultkey=pki/issue/'+ sensu_hvault_pki_role +' common_name=' + ansible_nodename) }}"
+  when: sensu_hvault and sensu_hvault_pki_role
+
+- name: hashicorp vault ca cert
+  copy:
+    content: "{{sensu_hvault_certs.issuing_ca}}"
+    dest: "/etc/pki/tls/certs/sensu_ca.crt"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: "0640"
+  when: sensu_hvault and sensu_hvault_certs.issuing_ca is defined
+  notify:
+    - service restart sensu-server
+    - service restart sensu-client
+
+- name: hashicorp vault server cert
+  copy:
+    content: "{{sensu_hvault_certs.certificate}}"
+    dest: "/etc/pki/tls/certs/{{sensu_cert_file}}"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: "0640"
+  when: sensu_hvault and sensu_hvault_certs.certificate is defined
+  notify:
+    - service restart sensu-server
+    - service restart sensu-client
+
+- name: hashicorp vault private key
+  copy:
+    content: "{{sensu_hvault_certs.private_key}}"
+    dest: "/etc/pki/tls/private/{{sensu_key_file}}"
+    owner: "{{sensu_user}}"
+    group: "{{sensu_group}}"
+    mode: "0640"
+  when: sensu_hvault and sensu_hvault_certs.private_key is defined
   notify:
     - service restart sensu-server
     - service restart sensu-client
@@ -53,7 +93,6 @@
     owner=sensu
     group=sensu
     mode=0640
-    backup=yes
   when: sensu_transport == "rabbitmq"
   notify:
     - service restart sensu-server

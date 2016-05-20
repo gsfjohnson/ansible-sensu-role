@@ -150,3 +150,7 @@ sensu_graph_diskio: false
 sensu_graph_diskio_targets: []
 
 sensu_graph_net: true
+
+sensu_hvault: false
+sensu_hvault_pki_role: prod
+
